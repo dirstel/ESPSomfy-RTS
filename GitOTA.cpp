@@ -53,7 +53,7 @@ void GitRelease::toJSON(JsonResponse &json) {
   json.addElem("date", ts.getISOTime(this->releaseDate));
   json.addElem("draft", this->draft);
   json.addElem("preRelease", this->preRelease);
-  json.addElem("main", this->main);
+  // json.addElem("main", this->main);
   json.addElem("hasFS", this->hasFS);
   json.addElem("hwVersions", this->hwVersions);
   json.beginObject("version");
@@ -78,7 +78,7 @@ int16_t GitRepo::getReleases(WiFiClientSecure &sclient, uint8_t num) {
   char url[128];
   memset(this->releases, 0x00, sizeof(GitRelease) * GIT_MAX_RELEASES);
   sprintf(url, "https://api.github.com/repos/xkain/espsomfy-rts/releases?per_page=%d&page=1", count);
-
+/*
   GitRelease *main = &this->releases[GIT_MAX_RELEASES];
   main->releaseDate = Timestamp::now();
   main->id = 1;
@@ -86,7 +86,7 @@ int16_t GitRepo::getReleases(WiFiClientSecure &sclient, uint8_t num) {
   strcpy(main->version.name, "main");
   strcpy(main->name, "Main");
   strcpy(main->hwVersions, "32,s3");
-
+*/
   HTTPClient https;
   https.setReuse(false);
   if(https.begin(sclient, url)) {
@@ -175,7 +175,7 @@ void GitRepo::toJSON(JsonResponse &json) {
   settings.appVersion.toJSON(json);
   json.endObject();
   json.beginArray("releases");
-  for(uint8_t i = 0; i < GIT_MAX_RELEASES + 1; i++) {
+  for(uint8_t i = 0; i < GIT_MAX_RELEASES; i++) {
     if(this->releases[i].id == 0) continue;
     json.beginObject();
     this->releases[i].toJSON(json);
@@ -362,35 +362,67 @@ void GitUpdater::setFirmwareFile() {
 }
 
 bool GitUpdater::beginUpdate(const char *version) {
-  Serial.println("Begin update called...");
-  if(strcmp(version, "Main") == 0) strcpy(this->baseUrl, "https://raw.githubusercontent.com/xkain/ESPSomfy-RTS/main/");
-    else sprintf(this->baseUrl, "https://github.com/xkain/ESPSomfy-RTS/releases/download/%s/", version);
-      strcpy(this->targetRelease, version);
-  this->emitUpdateCheck();
+  // 1. Protection contre les pointeurs nuls ET interdiction explicite du Main
+  if (version == nullptr || strlen(version) == 0 || strcmp(version, "Main") == 0) {
+    Serial.println("ERREUR : Version invalide ou accès au Main interdit !");
+    this->error = -1;
+    this->status = GIT_UPDATE_COMPLETE;
+    return false;
+  }
+
+  Serial.printf("DEBUG: Demande d'update vers %s\n", version);
+  settings.printAvailHeap();
+
+  // 2. Construction de l'URL (Uniquement pour les releases GitHub désormais)
+  // On a supprimé le "if main" ici car il est bloqué plus haut.
+  snprintf(this->baseUrl, sizeof(this->baseUrl), "https://github.com/xkain/ESPSomfy-RTS/releases/download/%s/", version);
+
+  // 3. Initialisation des paramètres de mise à jour
+  strlcpy(this->targetRelease, version, sizeof(this->targetRelease));
   this->setFirmwareFile();
+  this->emitUpdateCheck();
+
   this->partition = U_FLASH;
-  this->lockFS = this->cancelled = false;
+  this->lockFS = false;
+  this->cancelled = false;
   this->error = 0;
+
+  // 4. ÉTAPE 1 : Téléchargement du Firmware (APP)
+  Serial.printf("Étape 1 : Mise à jour du Firmware (%s)\n", this->currentFile);
   this->error = this->downloadFile();
-  if(this->error == 0 && !this->cancelled) {
+
+  // 5. ÉTAPE 2 : Si le firmware est OK, on fait le LittleFS (DATA)
+  if (this->error == 0 && !this->cancelled) {
     somfy.commit();
-    strcpy(this->currentFile, "SomfyController.littlefs.bin");
+
+    Serial.println("Étape 2 : Mise à jour du système de fichiers (LittleFS)");
+    strlcpy(this->currentFile, "SomfyController.littlefs.bin", sizeof(this->currentFile));
     this->partition = U_SPIFFS;
     this->lockFS = true;
+
     this->error = this->downloadFile();
     this->lockFS = false;
-    if(this->error == 0) {
+
+    // 6. Finalisation si tout est OK
+    if (this->error == 0) {
       settings.fwVersion.parse(version);
       delay(100);
-      Serial.println("Committing Configuration...");
+      Serial.println("MAJ réussie. Enregistrement de la config...");
       somfy.commit();
+
+      rebootDelay.reboot = true;
+      rebootDelay.rebootTime = millis() + 500;
+    } else {
+      Serial.printf("Erreur lors de la MAJ LittleFS : %d\n", this->error);
     }
-    rebootDelay.reboot = true;
-    rebootDelay.rebootTime = millis() + 500;
+  } else {
+    if (this->cancelled) Serial.println("Mise à jour annulée par l'utilisateur.");
+    else Serial.printf("Échec de l'étape 1 (Firmware), code erreur : %d\n", this->error);
   }
+
   this->status = GIT_UPDATE_COMPLETE;
   this->emitUpdateCheck();
-  return true;
+  return (this->error == 0);
 }
 
 bool GitUpdater::recoverFilesystem() {
@@ -416,19 +448,30 @@ bool GitUpdater::endUpdate() { return true; }
 
 int8_t GitUpdater::downloadFile() {
   Serial.printf("Begin update %s\n", this->currentFile);
-  // downloadFile() garde son propre WiFiClientSecure car il est appelé
-  // indépendamment de checkForUpdate(), depuis beginUpdate().
   WiFiClientSecure sclient;
   sclient.setInsecure();
   HTTPClient https;
   char url[196];
   sprintf(url, "%s%s", this->baseUrl, this->currentFile);
+
+  // --- LOGS CRITIQUES ICI ---
+  Serial.print("Tentative de téléchargement sur : ");
   Serial.println(url);
+  // --------------------------
+
   esp_task_wdt_reset();
   if(https.begin(sclient, url)) {
     https.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
-    Serial.print("[HTTPS] GET...\n");
     int httpCode = https.GET();
+
+    // --- LOGS DE RÉPONSE ---
+    if(httpCode > 0) {
+      Serial.printf("[HTTPS] Réponse serveur : %d\n", httpCode);
+    } else {
+      Serial.printf("[HTTPS] ÉCHEC CONNEXION : %s\n", https.errorToString(httpCode).c_str());
+    }
+    // -----------------------
+
     if(httpCode > 0) {
       size_t len = https.getSize();
       size_t total = 0;

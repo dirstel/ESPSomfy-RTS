@@ -156,9 +156,9 @@ void somfy_frame_t::decodeFrame(byte* frame) {
         this->proto = radio_proto::RTV;
         this->cmd = (somfy_commands)(this->encKey - 148);
       }
-      else if(this->encKey > 133) {
+      else if(this->encKey > 132) {
         this->proto = radio_proto::RTW;
-        this->cmd = (somfy_commands)(this->encKey - 133);
+        this->cmd = (somfy_commands)(this->encKey - 132);
       }
     }
     else this->proto = radio_proto::RTS;
@@ -679,7 +679,7 @@ void SomfyShade::clear() {
   this->flipPosition = false;
   this->flipCommands = false;
   this->lastRollingCode = 0;
-  this->shadeType = shade_types::roller;
+  this->shadeType = shade_types::shutter;
   this->tiltType = tilt_types::none;
   //this->txQueue.clear();
   this->currentPos = 0.0f;

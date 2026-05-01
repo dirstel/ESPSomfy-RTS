@@ -287,7 +287,7 @@ class SomfyShade : public SomfyRemote {
     uint8_t roomId = 0;
     int8_t sortOrder = 0;
     bool flipPosition = false;
-    shade_types shadeType = shade_types::roller;
+    shade_types shadeType = shade_types::shutter;
     tilt_types tiltType = tilt_types::none;
     #ifdef USE_NVS
     void load();

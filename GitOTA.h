@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <time.h>
-#include <WiFiClientSecure.h>  // <--- AJOUTÉ pour WiFiClientSecure
+#include <WiFiClientSecure.h>
 #include "ConfigSettings.h"
 #include "WResp.h"
 
@@ -17,14 +17,14 @@
 #define GIT_UPDATE_CANCELLING 5
 #define GIT_UPDATE_CANCELLED 6
 
-#define UPDATE_ERR_OFFSET 100 // <--- AJOUTÉ pour corriger l'erreur de scope dans le .cpp
+#define UPDATE_ERR_OFFSET 100
 
 class GitRelease {
 public:
   uint64_t id = 0;
   bool draft = false;
   bool preRelease = false;
-  bool main = false;
+  //bool main = false;
   bool hasFS = false;
   char hwVersions[128] = "";
   time_t releaseDate;
@@ -37,9 +37,8 @@ public:
 
 class GitRepo {
 public:
-  // MODIFIÉ : Ajout du paramètre WiFiClientSecure &sclient
   int16_t getReleases(WiFiClientSecure &sclient, uint8_t num = GIT_MAX_RELEASES);
-  GitRelease releases[GIT_MAX_RELEASES + 1];
+  GitRelease releases[GIT_MAX_RELEASES];
   void toJSON(JsonResponse &json);
 };
 

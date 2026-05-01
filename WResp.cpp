@@ -6,8 +6,8 @@
 // Macro WDT : reset + yield entre opérations longues.
 // Même macro que dans Sockets.cpp pour cohérence.
 // ─────────────────────────────────────────────
-#define WDT_FEED() do { esp_task_wdt_reset(); yield(); } while(0)
-
+//#define WDT_FEED() do { esp_task_wdt_reset(); yield(); } while(0)
+#define WDT_FEED() esp_task_wdt_reset()
 /*********************************************************************
  * JsonSockEvent members
  ********************************************************************/
@@ -68,17 +68,19 @@ void JsonResponse::beginResponse(WebServer *server, char *buff, size_t buffSize)
 
 void JsonResponse::endResponse() {
   if(strlen(this->buff)) this->send();
-  WDT_FEED();
+  esp_task_wdt_reset();
+  yield();
+
   server->sendContent("", 0);
 }
 
 void JsonResponse::send() {
-  WDT_FEED();
+  esp_task_wdt_reset();
   if(!this->_headersSent) server->send_P(200, "application/json", this->buff);
   else                    server->sendContent(this->buff);
   this->buff[0]      = 0x00;
   this->_headersSent = true;
-  WDT_FEED();
+  //WDT_FEED();
 }
 
 void JsonResponse::_safecat(const char *val, bool escape) {

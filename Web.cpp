@@ -240,7 +240,7 @@ void Web::handleLogin(WebServer &server) {
       Serial.println(pin);
       if(strlen(pin) == 0 || strcmp(pin, settings.Security.pin) != 0) {
         obj["success"] = false;
-        obj["msg"] = "Invalid Pin Entry";
+        obj["msg"] = "ERR_PIN_INVALID";
       }
       else {
         obj["success"] = true;
@@ -1064,43 +1064,34 @@ void Web::handleSetSensor(WebServer &server) {
 void Web::handleDownloadFirmware(WebServer &server) {
   webServer.sendCORSHeaders(server);
   if(server.method() == HTTP_OPTIONS) { server.send(200, "OK"); return; }
-  GitRepo repo;
-  GitRelease *rel = nullptr;
-  WiFiClientSecure sclient;
-  int16_t err = repo.getReleases(sclient);
-  Serial.println("downloadFirmware called...");
-  if(err == 0) {
-    if(server.hasArg("ver")) {
-      if(strcmp(server.arg("ver").c_str(), "latest") == 0) rel = &repo.releases[0];
-      else if(strcmp(server.arg("ver").c_str(), "main") == 0) {
-        rel = &repo.releases[GIT_MAX_RELEASES];
-      }
-      else {
-        for(uint8_t i = 0; i < GIT_MAX_RELEASES; i++) {
-          if(repo.releases[i].id == 0) continue;
-          if(strcmp(repo.releases[i].name, server.arg("ver").c_str()) == 0) {
-            rel = &repo.releases[i];  
-          }
-        }
-      }
-      if(rel) {
-        JsonResponse resp;
-        resp.beginResponse(&server, g_content, sizeof(g_content));
-        resp.beginObject();
-        rel->toJSON(resp);
-        resp.endObject();
-        resp.endResponse();
-        strcpy(git.targetRelease, rel->name);
-        git.status = GIT_AWAITING_UPDATE;
-      }
-      else
-        server.send(500, _encoding_json, F("{\"status\":\"ERROR\",\"desc\":\"Release not found in repo.\"}"));
-    }
-    else
-      server.send(500, _encoding_json, F("{\"status\":\"ERROR\",\"desc\":\"Release version not supplied.\"}"));
+
+  // On vérifie juste si l'argument "ver" est présent dans l'URL
+  if(server.hasArg("ver")) {
+    String version = server.arg("ver");
+
+    Serial.printf("Relance de l'update forcée pour : %s\n", version.c_str());
+
+    // On prépare la réponse JSON pour le navigateur
+    JsonResponse resp;
+    resp.beginResponse(&server, g_content, sizeof(g_content));
+    resp.beginObject();
+    resp.addElem("status", "OK");
+    resp.addElem("version", version.c_str());
+    resp.endObject();
+    resp.endResponse();
+
+    // ON BYPASSE LA VÉRIFICATION DU REPO :
+    // On copie directement le nom de la version dans l'objet git
+    strlcpy(git.targetRelease, version.c_str(), sizeof(git.targetRelease));
+
+    // On change le statut : GitUpdater::loop() verra ça et lancera downloadFile()
+    git.status = GIT_AWAITING_UPDATE;
+
+    // On force l'arrêt propre de la connexion client pour libérer la RAM
+    server.client().stop();
   }
   else {
-      server.send(err, _encoding_json, F("{\"status\":\"ERROR\",\"desc\":\"Error communicating with Github.\"}"));
+    server.send(400, _encoding_json, F("{\"status\":\"ERROR\",\"desc\":\"Release version not supplied.\"}"));
   }
 }
 void Web::handleNotFound(WebServer &server) {
