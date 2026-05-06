@@ -16,7 +16,7 @@
 #include "Network.h"
 
 
-#include <WiFiClientSecure.h>
+
 
 extern ConfigSettings settings;
 extern SSDPClass SSDP;
@@ -146,30 +146,19 @@ void Web::handleLang(WebServer &server) {
     webServer.sendCORSHeaders(server);
     if (server.method() == HTTP_OPTIONS) { server.send(200, "OK"); return; }
 
-    String filename = "/locale/en.json.gz"; // Par défaut en .gz
+    String filename = "/locale/en.json"; // Par défaut
 
-    // On définit le fichier selon le réglage
-    if (settings.language == 0) filename = "/locale/en.json.gz";
-    else if (settings.language == 1) filename = "/locale/fr.json.gz";
-    else if (settings.language == 2) filename = "/locale/de.json.gz";
+    // On définit une liste de correspondance
+    if (settings.language == 0) filename = "/locale/en.json";
+    else if (settings.language == 1) filename = "/locale/fr.json";
+    else if (settings.language == 2) filename = "/locale/de.json"; // Allemand
+    //else if (settings.language == 3) filename = "/locale/es.json"; // Espagnol
 
     if (LittleFS.exists(filename)) {
       File file = LittleFS.open(filename, "r");
-
-      // --- MÉTHODE D'ENVOI MANUELLE (Identique à handleStreamFile) ---
-      server.setContentLength(file.size());
-      server.sendHeader("Content-Encoding", "gzip");
-
-      // On envoie le Type MIME JSON
-      server.send(200, "application/json", "");
-
-      // Envoi du binaire compressé
-      server.client().write(file);
-
+      server.streamFile(file, _encoding_json);
       file.close();
     } else {
-      Serial.print("Lang file not found: ");
-      Serial.println(filename);
       server.send(404, "text/plain", "Lang file not found");
     }
 }
@@ -251,7 +240,7 @@ void Web::handleLogin(WebServer &server) {
       Serial.println(pin);
       if(strlen(pin) == 0 || strcmp(pin, settings.Security.pin) != 0) {
         obj["success"] = false;
-        obj["msg"] = "ERR_PIN_INVALID";
+        obj["msg"] = "Invalid Pin Entry";
       }
       else {
         obj["success"] = true;
@@ -280,16 +269,9 @@ void Web::handleStreamFile(WebServer &server, const char *filename, const char *
     return;
   }
   webServer.sendCORSHeaders(server);
-
   if(server.method() == HTTP_OPTIONS) { server.send(200, "OK"); return; }
   esp_task_wdt_reset();
   // Load the index html page from the data directory.
-  // --- LE MOUCHARD DE MÉMOIRE ---
-  WiFiClient clientDetect = server.client();
-  //Serial.printf("\n[DEBUG] Requête de l'IP: %s | Fichier: %s\n", clientDetect.remoteIP().toString().c_str(), filename);
-  //Serial.printf("[DEBUG] RAM Avant: Free:%d | MaxBlock:%d\n", ESP.getFreeHeap(), ESP.getMaxAllocHeap());
-  // ------------------------------
-
   Serial.print("Loading file ");
   Serial.println(filename);
   File file = LittleFS.open(filename, "r");
@@ -297,13 +279,11 @@ void Web::handleStreamFile(WebServer &server, const char *filename, const char *
     Serial.print("Error opening");
     Serial.println(filename);
     server.send(500, _encoding_text, "Error opening file");
-    return;
   }
-  esp_task_wdt_reset();
+  esp_task_wdt_delete(NULL);
   server.streamFile(file, encoding);
   file.close();
-  server.client().stop();
-  //Serial.printf("[DEBUG] RAM Après: Free:%d | MaxBlock:%d\n", ESP.getFreeHeap(), ESP.getMaxAllocHeap());
+  esp_task_wdt_add(NULL);
   esp_task_wdt_reset();
 }
 void Web::handleController(WebServer &server) {
@@ -1075,34 +1055,42 @@ void Web::handleSetSensor(WebServer &server) {
 void Web::handleDownloadFirmware(WebServer &server) {
   webServer.sendCORSHeaders(server);
   if(server.method() == HTTP_OPTIONS) { server.send(200, "OK"); return; }
-
-  // On vérifie juste si l'argument "ver" est présent dans l'URL
-  if(server.hasArg("ver")) {
-    String version = server.arg("ver");
-
-    Serial.printf("Relance de l'update forcée pour : %s\n", version.c_str());
-
-    // On prépare la réponse JSON pour le navigateur
-    JsonResponse resp;
-    resp.beginResponse(&server, g_content, sizeof(g_content));
-    resp.beginObject();
-    resp.addElem("status", "OK");
-    resp.addElem("version", version.c_str());
-    resp.endObject();
-    resp.endResponse();
-
-    // ON BYPASSE LA VÉRIFICATION DU REPO :
-    // On copie directement le nom de la version dans l'objet git
-    strlcpy(git.targetRelease, version.c_str(), sizeof(git.targetRelease));
-
-    // On change le statut : GitUpdater::loop() verra ça et lancera downloadFile()
-    git.status = GIT_AWAITING_UPDATE;
-
-    // On force l'arrêt propre de la connexion client pour libérer la RAM
-    server.client().stop();
+  GitRepo repo;
+  GitRelease *rel = nullptr;
+  int8_t err = repo.getReleases();
+  Serial.println("downloadFirmware called...");
+  if(err == 0) {
+    if(server.hasArg("ver")) {
+      if(strcmp(server.arg("ver").c_str(), "latest") == 0) rel = &repo.releases[0];
+      else if(strcmp(server.arg("ver").c_str(), "main") == 0) {
+        rel = &repo.releases[GIT_MAX_RELEASES];
+      }
+      else {
+        for(uint8_t i = 0; i < GIT_MAX_RELEASES; i++) {
+          if(repo.releases[i].id == 0) continue;
+          if(strcmp(repo.releases[i].name, server.arg("ver").c_str()) == 0) {
+            rel = &repo.releases[i];  
+          }
+        }
+      }
+      if(rel) {
+        JsonResponse resp;
+        resp.beginResponse(&server, g_content, sizeof(g_content));
+        resp.beginObject();
+        rel->toJSON(resp);
+        resp.endObject();
+        resp.endResponse();
+        strcpy(git.targetRelease, rel->name);
+        git.status = GIT_AWAITING_UPDATE;
+      }
+      else
+        server.send(500, _encoding_json, F("{\"status\":\"ERROR\",\"desc\":\"Release not found in repo.\"}"));
+    }
+    else
+      server.send(500, _encoding_json, F("{\"status\":\"ERROR\",\"desc\":\"Release version not supplied.\"}"));
   }
   else {
-    server.send(400, _encoding_json, F("{\"status\":\"ERROR\",\"desc\":\"Release version not supplied.\"}"));
+      server.send(err, _encoding_json, F("{\"status\":\"ERROR\",\"desc\":\"Error communicating with Github.\"}"));
   }
 }
 void Web::handleNotFound(WebServer &server) {
@@ -1174,10 +1162,8 @@ void Web::begin() {
   apiServer.on("/backup", []() { webServer.handleBackup(apiServer); });
   apiServer.on("/reboot", []() { webServer.handleReboot(apiServer); });
   
-  // Web Interface
   server.on("/lang", HTTP_GET, [this]() { this->handleLang(server); });
   server.on("/setLang", HTTP_GET, [this]() { this->handleSetLang(server); });
-
 
   server.on("/tiltCommand", []() { webServer.handleTiltCommand(server); });
   server.on("/repeatCommand", []() { webServer.handleRepeatCommand(server); });
@@ -1186,7 +1172,7 @@ void Web::begin() {
   server.on("/setPositions", []() { webServer.handleSetPositions(server); });
   server.on("/setSensor", []() { webServer.handleSetSensor(server); });
   server.on("/upnp.xml", []() { SSDP.schema(server.client()); });
-  server.on("/", [this]() { webServer.handleStreamFile(server, "/index.html.gz", "text/html"); });
+  server.on("/", []() { webServer.handleStreamFile(server, "/index.html", _encoding_html); });
   server.on("/login", []() { webServer.handleLogin(server); });
   server.on("/loginContext", []() { webServer.handleLoginContext(server); });
   server.on("/shades.cfg", []() { webServer.handleStreamFile(server, "/shades.cfg", _encoding_text); });
@@ -1194,16 +1180,8 @@ void Web::begin() {
   server.on("/getReleases", []() {
     webServer.sendCORSHeaders(server);
     if(server.method() == HTTP_OPTIONS) { server.send(200, "OK"); return; }
-
     GitRepo repo;
-    {
-    // --- FIX HEAP : Création du client TLS sécurisé ---
-    WiFiClientSecure sclient;
-    sclient.setInsecure(); // GitHub nécessite HTTPS mais on ignore la vérif certificat
-    repo.getReleases(sclient); // On passe le client ici
-    }
-    // --------------------------------------------------
-
+    repo.getReleases();
     git.setCurrentRelease(repo);
     JsonResponse resp;
     resp.beginResponse(&server, g_content, sizeof(g_content));
@@ -1211,7 +1189,6 @@ void Web::begin() {
     repo.toJSON(resp);
     resp.endObject();
     resp.endResponse();
-    server.client().stop();
   });
   server.on("/downloadFirmware", []() { webServer.handleDownloadFirmware(server); });
   server.on("/cancelFirmware", []() {
@@ -1284,11 +1261,11 @@ void Web::begin() {
 
     });
 
-  server.on("/index.js", [this]() { webServer.sendCacheHeaders(604800); webServer.handleStreamFile(server, "/index.js.gz", "application/javascript"); });
-  server.on("/base.css", [this]() { webServer.sendCacheHeaders(604800); webServer.handleStreamFile(server, "/base.css.gz", "text/css"); });
-  server.on("/main.css", [this]() { webServer.sendCacheHeaders(604800); webServer.handleStreamFile(server, "/main.css.gz", "text/css"); });
-  server.on("/overlays.css", [this]() { webServer.sendCacheHeaders(604800); webServer.handleStreamFile(server, "/overlays.css.gz", "text/css"); });
-  server.on("/favicon.svg", [this]() { webServer.sendCacheHeaders(604800); webServer.handleStreamFile(server, "/favicon.svg.gz", "image/svg+xml"); });
+  server.on("/index.js", []() { webServer.sendCacheHeaders(604800); webServer.handleStreamFile(server, "/index.js", "text/javascript"); });
+  server.on("/base.css", []() {  webServer.sendCacheHeaders(604800); webServer.handleStreamFile(server, "/base.css", "text/css"); });
+  server.on("/main.css", []() { webServer.sendCacheHeaders(604800); webServer.handleStreamFile(server, "/main.css", "text/css"); });
+  server.on("/overlays.css", []() {  webServer.sendCacheHeaders(604800); webServer.handleStreamFile(server, "/overlays.css", "text/css"); });
+  server.on("/favicon.svg", []() { webServer.sendCacheHeaders(604800); webServer.handleStreamFile(server, "/favicon.svg", "image/svg+xml"); });
   server.onNotFound([]() { webServer.handleNotFound(server); });
   server.on("/controller", []() { webServer.handleController(server); });
   server.on("/rooms", []() { webServer.handleGetRooms(server); });

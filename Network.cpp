@@ -339,7 +339,7 @@ void Network::setConnected(conn_types_t connType) {
     snprintf(sModel, sizeof(sModel), "ESP32-%s", settings.chipModel);
     SSDP.setModelNumber(0, sModel);
   }
-  SSDP.setModelURL(0, "https://github.com/xkain/ESPSomfy-RTS");
+  SSDP.setModelURL(0, "https://github.com/xkain/espsomfy-rts");
   SSDP.setManufacturer(0, "xkain");
   SSDP.setManufacturerURL(0, "https://github.com/xkain");
   SSDP.setURL(0, "/");

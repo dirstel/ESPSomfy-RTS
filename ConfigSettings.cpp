@@ -149,13 +149,31 @@ double BaseSettings::parseValueDouble(JsonObject &obj, const char *prop, double 
   if(obj.containsKey(prop)) return obj[prop];
   return defVal;
 }
+
+
+
+
+
+
+
 bool ConfigSettings::begin() {
   uint32_t chipId = 0;
   esp_chip_info_t ci;
   esp_chip_info(&ci);
   switch(ci.model) {
+    /*
     case esp_chip_model_t::CHIP_ESP32:
       strcpy(this->chipModel, "");
+      break;
+     */
+
+    case esp_chip_model_t::CHIP_ESP32:
+      // On vérifie si c'est un module avec PSRAM (WROVER) ou standard (WROOM)
+      if (psramFound()) {
+        strcpy(this->chipModel, "wrover");
+      } else {
+        strcpy(this->chipModel, ""); // Ou "32" selon vos préférences d'affichage
+      }
       break;
     case esp_chip_model_t::CHIP_ESP32S3:
       strcpy(this->chipModel, "s3");
@@ -300,10 +318,9 @@ uint16_t ConfigSettings::calcSettingsRecSize() {
     + strlen(this->hostname) + 3
     + strlen(this->NTP.ntpServer) + 3
     + strlen(this->NTP.posixZone) + 3
-    + strlen(this->accentColor) + 3
     + 6  // ssdpbroadcast
-    + 6 // updateCheck
-    + 4;  // language
+    + 6; // updateCheck
+    + 3;  // language
 }
 uint16_t ConfigSettings::calcNetRecSize() {
   return 4 // connType
@@ -636,7 +653,7 @@ bool WifiSettings::load() {
   pref.getString("passphrase", this->passphrase, sizeof(this->passphrase));
   this->ssid[sizeof(this->ssid) - 1] = '\0';
   this->passphrase[sizeof(this->passphrase) - 1] = '\0';
-  this->roaming = pref.getBool("roaming", false);
+  this->roaming = pref.getBool("roaming", true);
   this->hidden = pref.getBool("hidden", false);
   pref.end();
   return true;

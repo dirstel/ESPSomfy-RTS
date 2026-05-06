@@ -7,7 +7,7 @@
 
 extern Preferences pref;
 
-#define SHADE_HDR_VER 26
+#define SHADE_HDR_VER 25
 #define SHADE_HDR_SIZE 76
 #define SHADE_REC_SIZE 276
 #define GROUP_REC_SIZE 200
@@ -684,49 +684,11 @@ bool ShadeConfigFile::readTransRecord(transceiver_config_t &cfg) {
     cfg.proto = static_cast<radio_proto>(this->readUInt8(0));
     cfg.type = this->readUInt8(56);
     if(this->header.transRecordSize < 78) {
-      cfg.radioBoardType = 0; // Valeur par défaut pour les anciens backups
-      Serial.println("Old backup detected (v2.4.8), skipping radioBoardType");
+      cfg.radioBoardType = 0;
+      //Serial.println("Old backup detected (v2.4.6), skipping radioBoardType");
     } else {
-      // Si la taille est de 82 ou plus, on lit le champ normalement
       cfg.radioBoardType = this->readUInt8(0);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     cfg.SCKPin = this->readUInt8(cfg.SCKPin);
     cfg.CSNPin = this->readUInt8(cfg.CSNPin);
     cfg.MOSIPin = this->readUInt8(cfg.MOSIPin);
@@ -736,7 +698,7 @@ bool ShadeConfigFile::readTransRecord(transceiver_config_t &cfg) {
     cfg.frequency = this->readFloat(cfg.frequency);
     cfg.rxBandwidth = this->readFloat(cfg.rxBandwidth);
     cfg.deviation = this->readFloat(cfg.deviation);
-    cfg.txPower = this->readInt8(cfg.txPower);  
+    cfg.txPower = this->readInt8(cfg.txPower);
     if(this->file.position() != startPos + this->header.transRecordSize) {
       Serial.println("Reading to end of transceiver record");
       this->seekChar(CFG_REC_END);
@@ -764,7 +726,7 @@ bool ShadeConfigFile::readSettingsRecord() {
     if(this->header.version >= 25) {
       settings.language = this->readUInt8(0);
     } else {
-      settings.language = 0;
+      settings.language = 0; // Anglais par défaut pour les versions antérieures
     }
     if(this->file.position() != startPos + this->header.settingsRecordSize) {
       Serial.println("Reading to end of settings record");

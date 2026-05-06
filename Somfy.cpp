@@ -679,7 +679,7 @@ void SomfyShade::clear() {
   this->flipPosition = false;
   this->flipCommands = false;
   this->lastRollingCode = 0;
-  this->shadeType = shade_types::shutter;
+  this->shadeType = shade_types::roller;
   this->tiltType = tilt_types::none;
   //this->txQueue.clear();
   this->currentPos = 0.0f;
