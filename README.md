@@ -107,29 +107,32 @@ This fork remains 100% compatible with the official ESPSomfy-RTS-HA integration.
 
 ## 🛠️ Troubleshooting & Factory Reset
 
-Si vous perdez l'accès à l'interface web (erreur de configuration réseau ou mot de passe oublié) , une procédure de réinitialisation manuelle est disponible via des cycles d'alimentation (**Power Cycles**).
+
+If you lose access to the web interface (network configuration error or forgotten password), a manual reset procedure is available via (**Power Cycles**).
+
 
 > [!IMPORTANT]
-> La procédure dépend de votre version de firmware. Un système à deux paliers a été introduit en **v2.5.1** pour permettre de réinitialiser le réseau sans perdre l'ensemble de vos configuration (ce qui est le cas si vous etes sur la version **v2.5.0**).
+
+>The procedure depends on your firmware version. A two-tier system was introduced in **v2.5.1** to allow resetting the network without losing all your configurations (which is the case if you are on version **v2.5.0**).
+
 
 ### Résumé des procédures
 
 * **Version v2.5.1+ :**
-    * **3 Cycles :** Réinitialise la configuration Wi-Fi et désactive les paramètres sécurité.
-    * **6 Cycles :** Factory Reset complet (**Full Wipe**).
+    * **3 Cycles :** Resets Wi-Fi configuration and disables security settings.
+    * **6 Cycles :** Full Factory Reset (**Full Wipe**).
 * **Version v2.5.0 :**
-    * **4 Cycles :** Factory Reset complet (**Full Wipe**).
+    * **4 Cycles :** Full Factory Reset (**Full Wipe**).
 
 ### 📖 Documentation complète
-Pour consulter les instructions détaillées, les schémas de cycles, veuillez consulter la page dédiée :
+To view detailed instructions and cycle diagrams, please visit the dedicated page:
 
-👉 **[Consulter la page Factory Reset](Lien_vers_ta_nouvelle_page.md)**
+👉 **[View the Factory Reset page](https://github.com/xkain/ESPSomfy-RTS/wiki/Factory-Reset)**
 
 ---
 
 > [!TIP]
-> Utilisez toujours ces procédures en dernier recours. Si l'interface est encore accessible, privilégiez le bouton **Restore** dans les paramètres système.
-
+> Always use these procedures as a last resort. If the interface is still accessible, use the **Restore** button in the system settings instead.
 
 ---
 
@@ -201,6 +204,7 @@ Si vous ne souhaitez pas fabriquer le matériel vous-même, je propose des **uni
 > **Note sur le Firmware & Configuration**
 >
 > Pour vous faciliter l'installation, le firmware a été légèrement pré-configuré : fuseau horaire (Paris), GPIO adaptés au boîtier et radio activée. Chaque exemplaire est testé individuellement avant l'envoi.
+>
 > Si par cas suite à une mise à jour vos équipements ne répondent plus, vérifiez que l'assignantion des GPIO dans l'onglet Radio est bien sur **CC1101 - ESP32 - D1**
 
 
