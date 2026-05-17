@@ -105,7 +105,6 @@ To view detailed instructions and cycle diagrams, please visit the dedicated pag
 
 👉 **[View the Factory Reset page](https://github.com/xkain/ESPSomfy-RTS/wiki/Factory-Reset)**
 
----
 
 > [!TIP]
 > Always use these procedures as a last resort. If the interface is still accessible, use the **Restore** button in the system settings instead.
