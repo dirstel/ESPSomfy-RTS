@@ -92,7 +92,7 @@ If you lose access to the web interface (network configuration error or forgotte
 >The procedure depends on your firmware version. A two-tier system was introduced in **v2.5.1** to allow resetting the network without losing all your configurations (which is the case if you are on version **v2.5.0**).
 
 
-### Résumé des procédures
+### Summary of procedures
 
 * **Version v2.5.1+ :**
     * **3 Cycles :** Resets Wi-Fi configuration and disables security settings.
@@ -100,7 +100,7 @@ If you lose access to the web interface (network configuration error or forgotte
 * **Version v2.5.0 :**
     * **4 Cycles :** Full Factory Reset (**Full Wipe**).
 
-### 📖 Documentation complète
+### 📖 Complete documentation
 To view detailed instructions and cycle diagrams, please visit the dedicated page:
 
 👉 **[View the Factory Reset page](https://github.com/xkain/ESPSomfy-RTS/wiki/Factory-Reset)**
@@ -170,7 +170,7 @@ Special thanks to [rstrouse](https://github.com/rstrouse) for the incredible wor
 
 ---
 
-## 📦 Boîtiers Prêts à l'Emploi (Plug & Play)
+## 📦 Boîtiers Prêts à l'Emploi (Plug & Play) 
 
 Si vous ne souhaitez pas fabriquer le matériel vous-même, je propose des **unités entièrement assemblées et testées**. Ces boîtiers sont prêts à être alimentés et configurés pour piloter vos équipements RTS 433 MHz.
 
