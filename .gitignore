@@ -1,14 +1,25 @@
+# --- Fichiers et dossiers spécifiques à PlatformIO ---
+.pio/
+.pioenvs/
+.piolibdeps/
+.clang_complete
+.gcc-flags.json
+extdata/
+
+# --- Dossiers de build et fichiers de sortie ---
+build/
+.cache/
+*.bin
+*.elf
+*.map
+
+# --- Fichiers d'environnement ---
+.vscode/
 .theia/
+.idea/
+*.code-workspace
+cmake-build-*/
 debug_custom.json
-esp32.vsd
-esp32s3.svd
+esp32.svd
 debug.cfg
 
-SomfyController.ino.XIAO_ESP32S3.bin
-SomfyController.ino.esp32c3.bin
-SomfyController.ino.esp32s2.bin
-.vscode/settings.json
-
-build/
-AA-BinAutoPlaceName.sh
-.Creator.py
