@@ -8,12 +8,12 @@
   <p align="center">
     Easily control and monitor your roller shutters, gates, garage doors, or any other device using the RTS 433 MHz protocol.
     <br />
-    <a href="https://github.com/rstrouse/ESPSomfy-RTS/wiki/Configuring-the-Software"><strong>Explore original docs »</strong></a>
+    <a href="https://github.com/xkain/ESPSomfy-RTS/wiki"><strong>Explore documentation »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/rstrouse/ESPSomfy-RTS/issues">Report Bug</a>
+    <a href="https://github.com/xkain/ESPSomfy-RTS/issues">Report Bug</a>
     &middot;
-    <a href="https://github.com/rstrouse/ESPSomfy-RTS/pulls">Request Feature</a>
+    <a href="https://github.com/xkain/ESPSomfy-RTS/pulls">Request Feature</a>
   </p>
 </div>
 <br />
@@ -45,7 +45,7 @@ Being French (and therefore a big fan of bread and cheese), I found during my ve
 
 While keeping the **rock-solid foundations** of the original project, I have completely redesigned the user experience to be **truly responsive**: the interface is just as pleasant to use on mobile and tablet as it is on PC, and navigation is finally crystal clear for non-English speakers.
 
-This project aims to make managing your Somfy RTS devices as beautiful as it is functional.
+This project aims to make managing your RTS 433 MHZ devices as beautiful as it is functional.
 
 <br />
 
@@ -72,64 +72,42 @@ If you are migrating from **rstrouse/ESPSomfy-RTS** or upgrading from an older v
 This fork remains 100% compatible with the official ESPSomfy-RTS-HA integration. If you are already using the integration, simply update your ESP32 with this firmware. Your entities, names, and dashboards in Home Assistant will continue to work without any modification.
 
 
-## Roadmap
-- [x] Add Multi-language Support
-    - [x] English
-    - [x] French
-    - [x] German
-- [x] New visual identity
-- [x] Fully responsive interface (mobile, tablet, and desktop)
-- [x] Add integrated Dark/Light mode with customizable accent colors
-- [x] All checkboxes replaced with modern switches
-- [x] All icons replaced with high-quality SVGs
-    - [ ] Performance optimization
-- [x] Virtual Remote completely redesigned
-- [x] Integrated WebSocket refactor by [y-streibel-uiris](https://github.com/y-streibel-uiris) to support secure HTTPS connections from [#624](https://github.com/rstrouse/ESPSomfy-RTS/pull/624)
-- [x] Passwords hidden by default with a "toggle eye" button
-- [x] Add Safety confirmation step to prevent accidental network lockouts
-- [x] Display MAC address in system info
-- [x] Control buttons are disabled until the device shade configuration is finalized
-- [x] Add a welcome/onboarding page to guide new users
-- [x] Add new GPIO Selector for easier radio assignment
-- [x] Add stepped sliders (1, 10, 100) for precise frequency tuning
-- [x] Add tooltips for better understanding of frequency settings
-- [x] Add visual graph for frequency scanning feedback
-- [x] Better integration of SetMyPosition and openSetMyPosition popups
-- [x] Add Factory Reset feature
-- [x] Add visual indicator (internal blue LED) for hard reset during boot
-    - [x] Support for ESP32 boards with LED on GPIO 02 (e.g., DevKit v1, D1 Mini)
-      * *Note: No support for S2, S3, and C3 models; GPIO 02 is kept free*
-- [x] Add device and connection uptime tracking
-- [x] Display detailed device information
-- [ ] Add Automations (scheduling shade opening/closing by time or day)
- 
+## Project ESPSomfy-RTS Roadmap
+
+Want to know what's coming next, check current release progress, or see completed features? We use GitHub Projects to maintain a live, up-to-date roadmap.
+
+[![ESPSomfy-RTS Roadmap](https://img.shields.io/badge/View_Live-Roadmap_🗣️-238636?style=for-the-badge&logo=github)](https://github.com/users/xkain/projects/2)
+
+> 💡 **Click the badge above** to track real-time development, active milestones (`v2.5.3`, `v3.0.0`), and submit features or bug fixes directly into our workflow columns.
+
 <br />
 
 ## 🛠️ Troubleshooting & Factory Reset
 
-Si vous perdez l'accès à l'interface web (erreur de configuration réseau ou mot de passe oublié) , une procédure de réinitialisation manuelle est disponible via des cycles d'alimentation (**Power Cycles**).
+
+If you lose access to the web interface (network configuration error or forgotten password), a manual reset procedure is available via (**Power Cycles**).
+
 
 > [!IMPORTANT]
-> La procédure dépend de votre version de firmware. Un système à deux paliers a été introduit en **v2.5.1** pour permettre de réinitialiser le réseau sans perdre l'ensemble de vos configuration (ce qui est le cas si vous etes sur la version **v2.5.0**).
+>The procedure depends on your firmware version. A two-tier system was introduced in **v2.5.1** to allow resetting the network without losing all your configurations (which is not the case if you are using version **2.5.0**).
 
-### Résumé des procédures
+
+### Summary of procedures
 
 * **Version v2.5.1+ :**
-    * **3 Cycles :** Réinitialise la configuration Wi-Fi et désactive les paramètres sécurité.
-    * **6 Cycles :** Factory Reset complet (**Full Wipe**).
+    * **3 Cycles :** Resets Wi-Fi configuration and disables security settings.
+    * **6 Cycles :** Full Factory Reset (**Full Wipe**).
 * **Version v2.5.0 :**
-    * **4 Cycles :** Factory Reset complet (**Full Wipe**).
+    * **4 Cycles :** Full Factory Reset (**Full Wipe**).
 
-### 📖 Documentation complète
-Pour consulter les instructions détaillées, les schémas de cycles, veuillez consulter la page dédiée :
+### 📖 Complete documentation
+To view detailed instructions and cycle diagrams, please visit the dedicated page:
 
-👉 **[Consulter la page Factory Reset](Lien_vers_ta_nouvelle_page.md)**
+👉 **[View the Factory Reset page](https://github.com/xkain/ESPSomfy-RTS/wiki/Factory-Reset)**
 
----
 
 > [!TIP]
-> Utilisez toujours ces procédures en dernier recours. Si l'interface est encore accessible, privilégiez le bouton **Restore** dans les paramètres système.
-
+> Always use these procedures as a last resort. If the interface is still accessible, use the **Restore** button in the system settings instead.
 
 ---
 
@@ -180,7 +158,7 @@ Since this is a fork, you can rely on the extensive original documentation for t
 * 📖 **[Configuring the Software](https://github.com/rstrouse/ESPSomfy-RTS/wiki/Configuring-the-Software)**
 * ⚙️ **[Installing the Firmware](https://github.com/rstrouse/ESPSomfy-RTS/wiki/Installing-the-Firmware)**
 * 🔄 **[How to Update ESPSomfy RTS](https://github.com/rstrouse/ESPSomfy-RTS/wiki/Updating-ESPSomfy-RTS)**
-* 🔌 **[Integrations](https://github.com/rstrouse/ESPSomfy-RTS/wiki/Integrations)**
+* 🔌 **[Integrations](https://github.com/xkain/ESPSomfy-RTS/wiki/Intégrations)**
 
 
 
@@ -191,20 +169,31 @@ Special thanks to [rstrouse](https://github.com/rstrouse) for the incredible wor
 
 ---
 
+
+
 ## 📦 Boîtiers Prêts à l'Emploi (Plug & Play)
 
-Si vous ne souhaitez pas fabriquer le matériel vous-même, je propose des **unités entièrement assemblées et testées**. Ces boîtiers sont prêts à être alimentés et configurés pour piloter vos équipements RTS 433 MHz.
+Si vous ne souhaitez pas fabriquer le matériel vous-même, je propose des **unités entièrement assemblées, flashées et testées individuellement** avant envoi. Ces boîtiers sont prêts à être alimentés pour piloter immédiatement vos équipements Somfy RTS 433 MHz.
 
-🛒 **Disponible sur [Leboncoin](https://www.leboncoin.fr/profile/77a39e2a-ddb5-44c8-828a-954652c46ee7)**
+🛒 **Disponibles à l'achat sur [Leboncoin](https://www.leboncoin.fr/profile/77a39e2a-ddb5-44c8-828a-954652c46ee7)**
+
+
+
+
 
 > [!IMPORTANT]
-> **Note sur le Firmware & Configuration**
+> **💡 Note sur la configuration et l'assistant intégré**
+> 
+> **L'assistant de préconfiguration automatique a déjà été exécuté par mes soins sur votre boîtier avant son expédition.** Votre appareil est donc configuré et prêt à l'emploi dès la première mise sous tension :
+> * Interface entièrement en **Français**.
+> * Fuseau horaire local configuré (**Europe/Paris**).
+> * Module radio **activé** et **GPIO spécifiques** à votre modèle déjà assignés.
 >
-> Les boîtiers sont livrés **prêts à l'emploi** avec la version **v2.5.0**.
-> Pour vous faciliter l'installation, le firmware a été légèrement pré-configuré : fuseau horaire (Paris), GPIO adaptés au boîtier et radio activée. Chaque exemplaire est testé individuellement avant l'envoi.
+>Pour retrouver toutes les caractéristiques et détails, une page dédiée aux **[boîtiers](https://github.com/xkain/ESPSomfy-RTS/wiki/BO%C3%8ETIERS-LEBONCOIN)** est disponible.
+>
+> ⚠️ **En cas de perte de configuration :** Si après une mise à jour majeure ou une réinitialisation d'usine (*Factory Reset*) vos équipements ne répondent plus, pas de panique ! L'assistant reste disponible dans l'interface web.
 
 
-  
 <br><br>
 
 <p align="center">
