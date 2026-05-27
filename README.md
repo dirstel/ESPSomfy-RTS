@@ -1,10 +1,14 @@
-<img src="images/banniereSomfyRTS.png" alt="ESPSomfy-RTS-HA Banner" width="100%">
-<br />
-<br />
+[![GitHub Release](https://img.shields.io/github/release/xkain/ESPSomfy-RTS.svg?style=for-the-badge)](https://github.com/xkain/ESPSomfy-RTS/releases) [![GitHub Activity](https://img.shields.io/github/last-commit/xkain/ESPSomfy-RTS?style=for-the-badge)](https://github.com/xkain/ESPSomfy-RTS/commits/main) [![PlatformIO](https://img.shields.io/badge/PlatformIO-Compatible-orange?style=for-the-badge&logo=platformio&logoColor=white)](https://platformio.org) [![License](https://img.shields.io/github/license/xkain/ESPSomfy-RTS.svg?style=for-the-badge)](LICENSE) [![Project Maintenance](https://img.shields.io/badge/maintainer-xkain-blue.svg?style=for-the-badge)](https://github.com/xkain) [![Github](https://img.shields.io/github/followers/xkain.svg?style=for-the-badge)](https://github.com/xkain)
+
 <div align="center">
 
+  <img src="images/banniereSomfyRTS.png" alt="ESPSomfy-RTS Banner" width="100%">
+
+  <br />
+ 
   <p align="center">
     Easily control and monitor your roller shutters, gates, garage doors, or any other device using the RTS 433 MHz protocol.
+    <br />
     <br />
     <a href="https://github.com/xkain/ESPSomfy-RTS/blob/main/README_fr.md"><strong>README complet en français 🇫🇷 »</strong></a>
     <br />
@@ -12,14 +16,17 @@
     <br />
     <br />
     <a href="https://github.com/xkain/ESPSomfy-RTS/issues">Report Bug</a>
-    &middot;
+    ·
     <a href="https://github.com/xkain/ESPSomfy-RTS/pulls">Request Feature</a>
   </p>
 </div>
+
 <br />
 
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+<p align="center">
+  <img src="images/exemple.png" alt="ESPSomfy-RTS Screen Shot" width="100%">
+</p>
 
 
 ## About The Project
@@ -202,6 +209,4 @@ Si vous ne souhaitez pas fabriquer le matériel vous-même, je propose des **uni
   <img src="https://github.com/xkain/ESPSomfy-RTS/blob/main/images/boncoin01.jpg?raw=true" width="33%" />
 </p>
 
-<!-- MARKDOWN LINKS & IMAGES -->
-[product-screenshot]: images/exemple.png
-[product-hardreset]: images/hard-reset.GIF
+
