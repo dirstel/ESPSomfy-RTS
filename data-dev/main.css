@@ -514,6 +514,15 @@ opacity: 0.9;
 .credits-list .special-credit {
     opacity: 0.8;
 }
+.credit-link {
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--soustxt-color);
+    text-decoration: underline;
+}
+    .credit-link:hover {
+        opacity: 0.8;
+    }
 /* Page Network*/
 .wifi-container {
     display: flex;
