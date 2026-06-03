@@ -602,7 +602,7 @@ div.error-message,
     top: 20px;
     left: calc(var(--step-width) / 2);
     height: 3px;
-    background: #2196F3;
+    background: var(--accent-color);
     z-index: 0;
     transition: width 0.4s ease;
     width: 0%;

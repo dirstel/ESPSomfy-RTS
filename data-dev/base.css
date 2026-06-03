@@ -500,7 +500,6 @@ input[type="radio"]:hover {
 .input-number-custom:has(.step-select-arrow) .inputAndSelect {
     flex: 1;
     cursor: pointer;
-    z-index: 1;
     margin-right: -100px !important;
     padding-right: 100px !important;
 }
@@ -525,7 +524,6 @@ input[type="radio"]:hover {
     justify-content: flex-end;
     align-items: center;
     box-sizing: border-box;
-    z-index: 2;
 }
 .gpio-card .inputAndSelect {
     flex: 1;
@@ -632,6 +630,10 @@ input[type="number"] {
 .manual-safety-block {
     padding: 0 10px;
 }
+.manual-safety-block .switch:has(input:not(:checked)) {
+    animation: soft-pulse 2s infinite ease-in-out;
+}
+
 .safety-label {
     display: flex;
     align-items: center;

@@ -2613,7 +2613,7 @@ class Wifi {
             let clkVal = clk ? clk.val : 0;
 
             let div = document.createElement('div');
-            div.className = 'inst-overlay';
+            div.className = 'inst-overlay ethoverlay';
             div.innerHTML = `
             <div class="instructions-content">
             ${overlayHeader('ETH_SETTINGS_TITLE', 'ETH_SETTINGS_DESC', 'svg-ethernet')}
@@ -2635,10 +2635,18 @@ class Wifi {
             <div><b>${tr('MSG_DANGER')}</b> <span>${tr("ETH_SETTINGS_WARNING_DESC_2")}</span></div>
             </label>
             </div>
-            <div class="button-container-overlay">
+
+
+
+            <div class="hrDivFooter"></div>
+            <div class="button-container-overlay"><div class="footer-sticky-content"><div class="button-container-row">
+
             <button id="btnCancel" line type="button">${tr("BT_CANCEL_1")}</button>
             <button id="btnSaveEthernet" style="background:#ccc;cursor:not-allowed" type="button" disabled>${tr("BT_SAVE")}</button>
-            </div>
+            </div></div></div>
+
+
+
             </div>`;
 
             shOverlay(div);
@@ -2757,7 +2765,7 @@ class Somfy {
     radioBoardTypes = [
         { val: 0, label: 'DEFAULT', showGPIO: false },
         { val: 1, label: 'CC1101 – ESP32-D1', showGPIO: false, chips: ['esp32'], pins: { SCKPin: 18, CSNPin: 5, MOSIPin: 23, MISOPin: 19, TXPin: 21, RXPin: 22 } },
-        { val: 2, label: 'CC1101 – WT32-ETH01', showGPIO: false, chips: ['esp32'], pins: { SCKPin: 14, CSNPin: 12, MOSIPin: 15, MISOPin: 4, TXPin: 33, RXPin: 35 } },
+        { val: 2, label: 'CC1101 – WT32-ETH01', showGPIO: false, chips: ['esp32'], pins: { SCKPin: 14, CSNPin: 12, MOSIPin: 15, MISOPin: 4, TXPin: 2, RXPin: 35 } },
         { val: 3, label: 'CC1101 – Olimex ESP32-PoE/EVB', showGPIO: false, chips: ['esp32'], pins: { SCKPin: 14, CSNPin: 13, MOSIPin: 15, MISOPin: 16, TXPin: 4, RXPin: 36 } },
         { val: 4, label: 'CC1101 – LilyGO T-Internet POE', showGPIO: false, chips: ['esp32'], pins: { SCKPin: 14, CSNPin: 12, MOSIPin: 15, MISOPin: 16, TXPin: 4, RXPin: 35 } },
         { val: 5, label: 'CC1101 – wESP POE', showGPIO: false, chips: ['esp32'], pins: { SCKPin: 18, CSNPin: 5, MOSIPin: 13, MISOPin: 32, TXPin: 4, RXPin: 39 } },
@@ -2834,7 +2842,7 @@ class Somfy {
 
         if (target) {
             const labels = ['SCLK:', 'CSN:', 'MOSI:', 'MISO:', 'TX:', 'RX:'];
-            let html = `<div class="gpioRadio-container"><div class="help-container" onclick="somfy.toggleTooltip(this)"><svg class="help-svg"><use href=#icon-question></use></svg><div class="tooltip-text"><b>${tr('RADIO_TOOLTIP_GPIO_0')}</b><br><br>${tr('RADIO_TOOLTIP_GPIO_1')}<br>${tr('RADIO_TOOLTIP_GPIO_2')}<br><br><i>${tr('RADIO_TOOLTIP_GPIO_3')}</i><br><br><span style="color: #ffcc00;">${tr('RADIO_TOOLTIP_GPIO_4')}</span></div></div>`;
+            let html = `<div class="gpioRadio-container"><div class="help-container" onclick="somfy.toggleTooltip(this)"><svg class="help-svg"><use href=#icon-question></use></svg><div class="tooltip-text"><b>${tr('RADIO_TOOLTIP_GPIO_0')}</b><br><br>${tr('RADIO_TOOLTIP_GPIO_1')}<br>${tr('RADIO_TOOLTIP_GPIO_2')}<br><br><i>${tr('RADIO_TOOLTIP_GPIO_3')}</i><br><br></div></div>`;
 
             pk.forEach((k, i) => {
                 const v = target[k], selP = get(`selTrans${k}`), inpP = get(`inputTrans${k}`);

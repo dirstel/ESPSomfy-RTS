@@ -288,7 +288,6 @@
     "RADIO_TOOLTIP_GPIO_1": "El nombre (p.ej., SCLK) hace referencia al pin del módulo CC1101.",
     "RADIO_TOOLTIP_GPIO_2": "El número GPIO (p.ej., GPIO18) hace referencia al pin físico de tu ESP32.",
     "RADIO_TOOLTIP_GPIO_3": "Consulta el diagrama 'pinout' de tu modelo específico de ESP32 para localizarlos.",
-    "RADIO_TOOLTIP_GPIO_4": "Nota (excluye modelos S2, S3 y C3): GPIO02 está reservado para el sistema (LED/Reset) y por tanto no está disponible.",
     "RADIO_SAFETY_TEXT": "Entiendo los riesgos de una configuración incorrecta de los GPIO.",
     "RADIO_BASE_FREQUENCY": "Frecuencia base",
     "RADIO_BASE_FREQUENCY_HELP": "Frecuencia central de comunicación. Valor estándar: 433,42 MHz. Ajusta en incrementos mínimos si la recepción es deficiente. Vuelve a 433,42 MHz si tienes dudas.",
