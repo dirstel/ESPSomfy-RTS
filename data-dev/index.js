@@ -3097,7 +3097,7 @@ class Somfy {
             div.className = 'inst-overlay';
             div.innerHTML = `
             <div class="instructions-content">
-            ${overlayHeader('SCANFREQ_TITLE', 'SCANFREQ_DESC', 'icon-tabRadio')}
+            ${overlayHeader('SCANFREQ_TITLE', 'SCANFREQ_DESC', 'svg-tabRadio')}
             <div class="unibloc"><div>${tr("SCANFREQ_SCAN_DESC")}</div></div>
             <div class="unibloc">
             <div class="uniRow">

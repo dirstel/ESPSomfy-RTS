@@ -634,7 +634,7 @@
                                                 <div class="gpio-card">
                                                     <div class="input-number-custom">
                                                         <span class="input-label">Power</span>
-                                                        <input id="inputETHPWRPin" type="text" class="inputAndSelect" name="pwr" data-datatype="int" data-bind="ethernet.PWRPin" style="text-align: center;">
+                                                        <input id="inputETHPWRPin" type="text" class="inputAndSelect" name="pwr" data-datatype="int" autocomplete="new-password" data-bind="ethernet.PWRPin" style="text-align: center;">
                                                         <div class="step-buttons-warp">
                                                             <div class="step-buttons">
                                                                 <button type="button" id="btnEthPwrShortcut" class="btn-none-shortcut" onclick="wifi.setPowerToNone()" title="Activer/Désactiver l'alimentation">
@@ -649,7 +649,7 @@
                                                 <div class="gpio-card">
                                                     <div class="input-number-custom">
                                                         <span class="input-label">MDC</span>
-                                                        <input id="inputETHMDCPin" type="number" class="inputAndSelect" name="mdc" min="0" max="39" data-datatype="int" data-bind="ethernet.MDCPin">
+                                                        <input id="inputETHMDCPin" type="number" class="inputAndSelect" name="mdc" min="0" max="39" autocomplete="new-password" data-datatype="int" data-bind="ethernet.MDCPin">
                                                         <div class="step-buttons-warp">
                                                             <div class="step-buttons">
                                                                 <button type="button" onclick="wifi.stepGpio('MDCPin', -1)">−</button>
@@ -661,7 +661,7 @@
                                                 <div class="gpio-card">
                                                     <div class="input-number-custom">
                                                         <span class="input-label">MDIO</span>
-                                                        <input id="inputETHMDIOPin" type="number" class="inputAndSelect" name="mdio" min="0" max="39" data-datatype="int" data-bind="ethernet.MDIOPin">
+                                                        <input id="inputETHMDIOPin" type="number" class="inputAndSelect" name="mdio" min="0" max="39" autocomplete="new-password" data-datatype="int" data-bind="ethernet.MDIOPin">
                                                         <div class="step-buttons-warp">
                                                             <div class="step-buttons">
                                                                 <button type="button" onclick="wifi.stepGpio('MDIOPin', -1)">−</button>
@@ -1486,7 +1486,7 @@
                                                 <div class="input-number-custom">
                                                     <span class="input-label label-sclk">SCLK</span>
                                                     <select id="selTransSCKPin" class="inputAndSelect" name="transSCK" data-bind="transceiver.config.SCKPin" data-datatype="int"></select>
-                                                    <input type="number" id="inputTransSCKPin" class="inputAndSelect" min="0" max="48" style="display: none;" placeholder="--">
+                                                    <input type="number" id="inputTransSCKPin" class="inputAndSelect" min="0" max="48" autocomplete="new-password" style="display: none;" placeholder="--">
                                                     <div class="step-buttons-warp">
                                                         <div class="step-buttons">
                                                             <button type="button" onclick="somfy.stepGpio('SCKPin', -1)">−</button>
@@ -1499,7 +1499,7 @@
                                                 <div class="input-number-custom">
                                                     <span class="input-label label-mosi">MOSI</span>
                                                     <select id="selTransMOSIPin" class="inputAndSelect" name="transMOSI" data-bind="transceiver.config.MOSIPin" data-datatype="int"></select>
-                                                    <input type="number" id="inputTransMOSIPin" class="inputAndSelect" min="0" max="48" style="display: none;" placeholder="--">
+                                                    <input type="number" id="inputTransMOSIPin" class="inputAndSelect" min="0" max="48" autocomplete="new-password" style="display: none;" placeholder="--">
                                                     <div class="step-buttons-warp">
                                                         <div class="step-buttons">
                                                             <button type="button" onclick="somfy.stepGpio('MOSIPin', -1)">−</button>
@@ -1512,7 +1512,7 @@
                                                 <div class="input-number-custom">
                                                     <span class="input-label label-miso">MISO</span>
                                                     <select id="selTransMISOPin" class="inputAndSelect" name="transMISO" data-bind="transceiver.config.MISOPin" data-datatype="int"></select>
-                                                    <input type="number" id="inputTransMISOPin" class="inputAndSelect" min="0" max="48" style="display: none;" placeholder="--">
+                                                    <input type="number" id="inputTransMISOPin" class="inputAndSelect" min="0" max="48" autocomplete="new-password" style="display: none;" placeholder="--">
                                                     <div class="step-buttons-warp">
                                                         <div class="step-buttons">
                                                             <button type="button" onclick="somfy.stepGpio('MISOPin', -1)">−</button>
@@ -1529,7 +1529,7 @@
                                                 <div class="input-number-custom">
                                                     <span class="input-label label-csn">CSN</span>
                                                     <select id="selTransCSNPin" class="inputAndSelect" name="transCSN" data-bind="transceiver.config.CSNPin" data-datatype="int"></select>
-                                                    <input type="number" id="inputTransCSNPin" class="inputAndSelect" min="0" max="48" style="display: none;" placeholder="--">
+                                                    <input type="number" id="inputTransCSNPin" class="inputAndSelect" min="0" max="48" autocomplete="new-password" style="display: none;" placeholder="--">
                                                     <div class="step-buttons-warp">
                                                         <div class="step-buttons">
                                                             <button type="button" onclick="somfy.stepGpio('CSNPin', -1)">−</button>
@@ -1542,7 +1542,7 @@
                                                 <div class="input-number-custom">
                                                     <span class="input-label label-tx">TX</span>
                                                     <select id="selTransTXPin" class="inputAndSelect" name="transTX" data-bind="transceiver.config.TXPin" data-datatype="int"></select>
-                                                    <input type="number" id="inputTransTXPin" class="inputAndSelect" min="0" max="48" style="display: none;" placeholder="--">
+                                                    <input type="number" id="inputTransTXPin" class="inputAndSelect" min="0" max="48" autocomplete="new-password" style="display: none;" placeholder="--">
                                                     <div class="step-buttons-warp">
                                                         <div class="step-buttons">
                                                             <button type="button" onclick="somfy.stepGpio('TXPin', -1)">−</button>
@@ -1555,7 +1555,7 @@
                                                 <div class="input-number-custom">
                                                     <span class="input-label label-rx">RX</span>
                                                     <select id="selTransRXPin" class="inputAndSelect" name="transRX" data-bind="transceiver.config.RXPin" data-datatype="int"></select>
-                                                    <input type="number" id="inputTransRXPin" class="inputAndSelect" min="0" max="48" style="display: none;" placeholder="--">
+                                                    <input type="number" id="inputTransRXPin" class="inputAndSelect" min="0" max="48" autocomplete="new-password" style="display: none;" placeholder="--">
                                                     <div class="step-buttons-warp">
                                                         <div class="step-buttons">
                                                             <button type="button" onclick="somfy.stepGpio('RXPin', -1)">−</button>
